@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+#$:.unshift '/home/fisakytt/projects/tms/lib'
+require 'tms/config'
+require 'tms/db'
+require 'tms/snmp'
+require 'tms/event_handler'
+require 'tms/periodic'
+require 'sequel'
+require 'logger'
+
+Log = Logger.new STDOUT
+
+def populate
+  @eh = TMS::EventHandler.new
+  @periodic = TMS::Periodic.new @eh.poll, false
+  @periodic.run
+  @eh.run
+end
+
+populate

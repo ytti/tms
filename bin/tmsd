@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+#$:.unshift '/home/fisakytt/projects/tms/lib'
+#require 'pry'
+
+Process.daemon
+
+require 'tms'
+
+include TMS
+
+begin
+  UDP.new.alarm 'TMS starting'
+  Core.new
+rescue Exception => e
+  require 'pp'
+  Log.fatal ' ' * 40
+  Log.fatal e.message + ' [' + e.class.to_s + ']'
+  Log.fatal e.backtrace
+  Log.fatal PP.pp(e, '')
+  Log.fatal ' ' * 40
+  UDP.new.alarm 'TMS crashed, LAN-NMS not working'
+  #raise
+  exit 42
+end
